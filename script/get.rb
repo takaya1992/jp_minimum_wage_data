@@ -1,6 +1,7 @@
-require 'mechanize'
 require 'json'
-require './lib/prefecture'
+require 'mechanize'
+require 'jp_prefecture'
+require 'wareki'
 
 SITE_URL = 'http://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/'
 TR_COUNT = 49  # 47都道府県 + タイトル行 + フッター行
@@ -15,18 +16,26 @@ page = agent.get(SITE_URL)
 tr_list = page.search('table tr')
 exit false unless tr_list.length === 49
 
-minimum_wages = {}
-
 # 先頭行はタイトル行とし、読み捨てる
 tr_list.shift
 # 最終行はフッター行とし、読み捨てる
 tr_list.pop
 
+minimum_wages = []
 tr_list.each do |tr|
   td_list = tr.search('td')
-  prefecture_name = Prefecture.convert(td_list.first.inner_text)
-  wage = td_list[1].inner_text.gsub(/(\s|　|,)+/, '').to_i
-  minimum_wages[prefecture_name] = wage
+  fuzzy_pref_name = td_list[0].inner_text
+  fuzzy_wage = td_list[1].inner_text
+  fuzzy_effective_date = td_list[3].inner_text
+  prefecture = JpPrefecture::Prefecture.find(name: fuzzy_pref_name.gsub(/(\s|　)+/, ''))
+  wage = fuzzy_wage.gsub(/(\s|　|,)+/, '').to_i
+  effective_date = Date.parse(fuzzy_effective_date)
+  minimum_wages.push({
+    prefecture_name: prefecture.name,
+    prefecture_code: prefecture.code,
+    wage:            wage,
+    effective_date:  effective_date.strftime('%F')
+  })
 end
 
 json_data = JSON.generate(minimum_wages)
