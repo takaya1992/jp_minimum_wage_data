@@ -4,7 +4,8 @@ require './lib/prefecture'
 
 SITE_URL = 'http://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/'
 TR_COUNT = 49  # 47都道府県 + タイトル行 + フッター行
-SAVE_FILE = 'docs/minimum_wage.json'
+SAVE_JSON_FILE = 'docs/minimum_wage.json'
+SAVE_JSONP_FILE = 'docs/minimum_wage.jsonp'
 
 agent = Mechanize.new
 page = agent.get(SITE_URL)
@@ -28,6 +29,11 @@ tr_list.each do |tr|
   minimum_wages[prefecture_name] = wage
 end
 
-File.open(SAVE_FILE, 'w') do |file|
-  JSON.dump(minimum_wages, file)
+json_data = JSON.generate(minimum_wages)
+File.open(SAVE_JSON_FILE, 'w') do |file|
+  file.puts json_data
+end
+
+File.open(SAVE_JSONP_FILE, 'w') do |file|
+  file.puts "callback(#{json_data});"
 end
