@@ -5,6 +5,7 @@ require 'wareki'
 
 SITE_URL = 'http://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/minimumichiran/'
 TR_COUNT = 49  # 47都道府県 + タイトル行 + フッター行
+CALLBACK_FUNCTION_NAME = '$jpMinimumWageCallback'
 SAVE_JSON_FILE = 'docs/minimum_wage.json'
 SAVE_JSONP_FILE = 'docs/minimum_wage.jsonp'
 
@@ -44,5 +45,5 @@ File.open(SAVE_JSON_FILE, 'w') do |file|
 end
 
 File.open(SAVE_JSONP_FILE, 'w') do |file|
-  file.puts "callback(#{json_data});"
+  file.puts "#{CALLBACK_FUNCTION_NAME}(#{json_data});"
 end
