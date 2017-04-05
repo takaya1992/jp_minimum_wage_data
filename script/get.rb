@@ -15,7 +15,7 @@ page = agent.get(SITE_URL)
 # HTML内にtableが1つだけあり、行(tr)が49つ(47都道府県 + タイトル行 + フッター行)あることを前提とする
 # 49行ではなかった場合はエラーとして終了
 tr_list = page.search('table tr')
-exit false unless tr_list.length === 49
+exit false unless tr_list.length === TR_COUNT
 
 # 先頭行はタイトル行とし、読み捨てる
 tr_list.shift
