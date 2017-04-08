@@ -1,5 +1,5 @@
 machine:
-  timezone: Aisa/Tokyo
+  timezone: Asia/Tokyo
   ruby:
     version: 2.4.0
 test:
