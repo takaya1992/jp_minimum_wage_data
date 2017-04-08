@@ -1,0 +1,18 @@
+machine:
+  timezone: Aisa/Tokyo
+  ruby:
+    version: 2.4.0
+test:
+  post:
+    - >
+      if [ -n "${AUTO_UPDATE}" -a "${CIRCLE_BRANCH}" = 'master' ] ; then
+        bundle exec ruby script/get.rb
+      fi
+deployment:
+  auto-updater:
+    branch: master
+    commands:
+      - >
+        if [ -n "${AUTO_UPDATE}" ] ; then
+          bash script/circleci/push_if_needed.sh
+        fi
