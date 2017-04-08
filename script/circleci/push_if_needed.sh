@@ -4,7 +4,7 @@ if [ -n diff ] ; then
   git config --global user.email tky.c10ver@gmail.com
   git config --global user.name 'takaya1992'
   git add docs/
-  git commit -m 'auto update'
+  git commit -m 'auto update [ci skip]'
   git branch -M $BRANCH
   git push origin $BRANCH
 fi
