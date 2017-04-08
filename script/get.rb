@@ -1,3 +1,4 @@
+require 'date'
 require 'json'
 require 'mechanize'
 require 'jp_prefecture'
@@ -39,7 +40,10 @@ tr_list.each do |tr|
   })
 end
 
-json_data = JSON.generate(minimum_wages)
+json_data = JSON.generate({
+  minimum_wages: minimum_wages,
+  last_checked_at: DateTime.now.strftime('%FT%T%:z')
+})
 File.open(SAVE_JSON_FILE, 'w') do |file|
   file.puts json_data
 end
